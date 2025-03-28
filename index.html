@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Venus Party Maker</title>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const add_person_btn = document.querySelector(".add_person");
+
+            add_person_btn.addEventListener("click", (e) => {
+                e.preventDefault();
+
+                // person List 생성
+                let personList = document.createElement("li");
+                personList.textContent = prompt("이름을 입력해 주세요.") + " ";
+                document.querySelector(".person_list").appendChild(personList);
+
+
+                // 캐릭터 추가 버튼
+                let addCharactorBtn = document.createElement("button");
+                addCharactorBtn.textContent = "+";
+                personList.appendChild(addCharactorBtn);
+
+                // 캐릭터 추가
+                addCharactorBtn.addEventListener("click", (e) => {
+                    e.preventDefault();
+
+                    let charactor = document.createElement("span");
+                    let info = prompt("'서버명 캐릭터명'을 입력해 주세요.").split(' ');
+                    charactor.textContent = `[${info[0]}] ${info[1]}`;
+                    charactor.className = info[0];
+                    personList.insertBefore(charactor, addCharactorBtn);
+                })
+
+
+                // 사람 삭제 버튼
+                let removeBtn = document.createElement("button");
+                removeBtn.textContent = "삭제";
+                personList.appendChild(removeBtn);
+
+                removeBtn.addEventListener("click", (e) => {
+                    personList.remove();
+                })
+            })
+        })
+    </script>
+</head>
+<body>
+    <div class="wrapper">
+        <form>
+            <div>
+                <ul class="person_list">
+                </ul>
+            </div>
+            <button class="add_person">사람 추가</button>
+            <button type="submit">파티 짜기</button>
+        </form>
+    </div>
+</body>
+</html>
