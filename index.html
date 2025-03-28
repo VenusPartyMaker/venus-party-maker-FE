@@ -4,7 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Venus Party Maker</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
+        async function getCharacter(serverId, characterName) {
+            return new Promise((resolve, reject) => {
+                $.ajax({
+                    url: `http://3.38.183.110:8080/api/v1/party/getCharacter?serverId=${serverId}&characterName=${characterName}`,
+                    method: "GET",
+                    dataType: "json",
+                    success: function(data) {
+                        console.log("API 응답:", data);
+                        resolve(data);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("에러 발생:", error);
+                        reject(error);
+                    }
+                });
+            });
+        }
+
+        const isBuffer = (jobName) => ["크루세이더", "인챈트리스", "뮤즈"].includes(jobName) ? 1 : 0;
+
         document.addEventListener("DOMContentLoaded", () => {
             const add_person_btn = document.querySelector(".add_person");
 
@@ -13,24 +34,31 @@
 
                 // person List 생성
                 let personList = document.createElement("li");
-                personList.textContent = prompt("이름을 입력해 주세요.") + " ";
+                personList.textContent = prompt("이름을 입력해 주세요.");
                 document.querySelector(".person_list").appendChild(personList);
 
 
                 // 캐릭터 추가 버튼
-                let addCharactorBtn = document.createElement("button");
-                addCharactorBtn.textContent = "+";
-                personList.appendChild(addCharactorBtn);
+                let addCharacterBtn = document.createElement("button");
+                addCharacterBtn.textContent = "+";
+                personList.appendChild(addCharacterBtn);
 
                 // 캐릭터 추가
-                addCharactorBtn.addEventListener("click", (e) => {
+                addCharacterBtn.addEventListener("click", async (e) => {
                     e.preventDefault();
 
-                    let charactor = document.createElement("span");
-                    let info = prompt("'서버명 캐릭터명'을 입력해 주세요.").split(' ');
-                    charactor.textContent = `[${info[0]}] ${info[1]}`;
-                    charactor.className = info[0];
-                    personList.insertBefore(charactor, addCharactorBtn);
+                    let character = document.createElement("span");
+                    let id = prompt("'서버명 캐릭터명'을 입력해 주세요.").split(' ');
+                    character.textContent = `[${id[0]}] ${id[1]}`;
+                    character.className = id[0];
+                    let info = await getCharacter(id[0], id[1]);
+                    console.log(info);
+                    if (isBuffer(info.jobName)) {
+                        character.style.backgroundColor = "pink";
+                    } else {
+                        character.style.backgroundColor = "skyblue";
+                    }
+                    personList.insertBefore(character, addCharacterBtn);
                 })
 
 
@@ -42,6 +70,8 @@
                 removeBtn.addEventListener("click", (e) => {
                     personList.remove();
                 })
+
+
             })
         })
     </script>
