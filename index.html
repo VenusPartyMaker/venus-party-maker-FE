@@ -142,6 +142,10 @@
 
                     // person 삭제 이벤트
                     removeBtn.addEventListener("click", (e) => {
+                        personList.querySelectorAll("span").forEach(character => {
+                            character.style.backgroundColor === "pink" ? bufferCount-- : dealerCount--;
+                        });
+                        updateCount();
                         personList.remove();
                     })
                 }
