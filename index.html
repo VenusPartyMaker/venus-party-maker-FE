@@ -26,6 +26,39 @@
 
         const isBuffer = (jobName) => ["크루세이더", "인챈트리스", "뮤즈"].includes(jobName) ? 1 : 0;
 
+        function severnameToServerid(severName) {
+            switch (severName) {
+                case "안톤" : {
+                    return "anton";
+                }
+                case "바칼" : {
+                    return "bakal";
+                }
+                case "카인" : {
+                    return "cain";
+                }
+                case "카시야스" : {
+                    return "casillas";
+                }
+                case "디레지에" : {
+                    return "diregie";
+                }
+                case "힐더" : {
+                    return "hilder";
+                }
+                case "프레이" : {
+                    return "prey";
+                }
+                case "시로코" : {
+                    return "siroco";
+                }
+                default : {
+                    alert("서버를 잘못 입력했습니다.");
+                    return false;
+                }
+            }
+        }
+
         document.addEventListener("DOMContentLoaded", () => {
             const add_person_btn = document.querySelector(".add_person");
 
@@ -51,7 +84,7 @@
                     let id = prompt("'서버명 캐릭터명'을 입력해 주세요.").split(' ');
                     character.textContent = `[${id[0]}] ${id[1]}`;
                     character.className = id[0];
-                    let info = await getCharacter(id[0], id[1]);
+                    let info = await getCharacter(severnameToServerid(id[0]), id[1]);
                     console.log(info);
                     if (isBuffer(info.jobName)) {
                         character.style.backgroundColor = "pink";
