@@ -17,7 +17,8 @@
                         resolve(data);
                     },
                     error: function(xhr, status, error) {
-                        console.error("에러 발생:", error);
+                        alert("없는 캐릭터이거나, 에러가 발생했습니다.");
+                        console.log("에러:", error);
                         reject(error);
                     }
                 });
@@ -67,50 +68,53 @@
 
                 // person List 생성
                 let personList = document.createElement("li");
-                personList.textContent = prompt("이름을 입력해 주세요.");
-                document.querySelector(".person_list").appendChild(personList);
+                let personName = prompt("이름을 입력해 주세요.");
 
+                if (personName) {
+                    personList.textContent = personName;
+                    document.querySelector(".person_list").appendChild(personList);
 
-                // 캐릭터 추가 버튼
-                let addCharacterBtn = document.createElement("button");
-                addCharacterBtn.textContent = "+";
-                personList.appendChild(addCharacterBtn);
+                    // character 추가 버튼 생성
+                    let addCharacterBtn = document.createElement("button");
+                    addCharacterBtn.textContent = "+";
+                    personList.appendChild(addCharacterBtn);
 
-                // 캐릭터 추가
-                addCharacterBtn.addEventListener("click", async (e) => {
-                    e.preventDefault();
+                    // character 추가 이벤트
+                    /* todo : 캐릭터 객체로 바꾸기, 캐릭터리스트 ul li로 묶기*/
+                    addCharacterBtn.addEventListener("click", async (e) => {
+                        e.preventDefault();
 
-                    let character = document.createElement("span");
-                    let id = prompt("'서버명 캐릭터명'을 입력해 주세요.").split(' ');
-                    character.textContent = `[${id[0]}] ${id[1]}`;
-                    character.className = id[0];
-                    let info = await getCharacter(severnameToServerid(id[0]), id[1]);
-                    console.log(info);
-                    if (isBuffer(info.jobName)) {
-                        character.style.backgroundColor = "pink";
-                    } else {
-                        character.style.backgroundColor = "skyblue";
-                    }
-                    personList.insertBefore(character, addCharacterBtn);
-                })
+                        let character = document.createElement("span");
+                        let id = prompt("'서버명 캐릭터명'을 입력해 주세요.").split(' ');
 
+                        if (id) {
+                            if (severnameToServerid(id[0]) && id.length === 2) {
+                                character.textContent = `[${id[0]}] ${id[1]}`;
+                                let info = await getCharacter(severnameToServerid(id[0]), id[1]);
+                                character.id = `${severnameToServerid(id[0])}_${id[1]}_${isBuffer(info.jobName)}_${info.power}`;
+                                character.style.backgroundColor = isBuffer(info.jobName) ? "pink" : "skyblue";
+                                personList.insertBefore(character, addCharacterBtn);
+                            }
+                        }
+                    })
 
-                // 사람 삭제 버튼
-                let removeBtn = document.createElement("button");
-                removeBtn.textContent = "삭제";
-                personList.appendChild(removeBtn);
+                    // person 삭제 버튼 생성
+                    let removeBtn = document.createElement("button");
+                    removeBtn.textContent = "삭제";
+                    personList.appendChild(removeBtn);
 
-                removeBtn.addEventListener("click", (e) => {
-                    personList.remove();
-                })
-
-
+                    // person 삭제 이벤트
+                    removeBtn.addEventListener("click", (e) => {
+                        personList.remove();
+                    })
+                }
             })
         })
     </script>
 </head>
 <body>
     <div class="wrapper">
+        <h1>베누스 파티 메이커</h1>
         <form>
             <div>
                 <ul class="person_list">
