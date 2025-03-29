@@ -4,8 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Venus Party Maker</title>
+    <style>
+        li span, li button {
+            margin-left: 10px;
+        }
+        .pink {
+            color: pink;
+        }
+        .skyblue {
+            color: skyblue;
+        }
+    </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
+        let bufferCount = 0, dealerCount = 0;
+
+        function updateCount() {
+            const buffer = document.querySelector(".buffer");
+            const dealer = document.querySelector(".dealer");
+
+            buffer.textContent = bufferCount;
+            dealer.textContent = dealerCount;
+        }
+
         async function getCharacter(serverId, characterName) {
             return new Promise((resolve, reject) => {
                 $.ajax({
@@ -92,8 +113,17 @@
                                 character.textContent = `[${id[0]}] ${id[1]}`;
                                 let info = await getCharacter(severnameToServerid(id[0]), id[1]);
                                 character.id = `${severnameToServerid(id[0])}_${id[1]}_${isBuffer(info.jobName)}_${info.power}`;
-                                character.style.backgroundColor = isBuffer(info.jobName) ? "pink" : "skyblue";
+                                isBuffer(info.jobName) ? character.style.backgroundColor = "pink" : character.style.backgroundColor = "skyblue";
+                                if (isBuffer(info.jobName)) {
+                                    character.style.backgroundColor = "pink";
+                                    bufferCount++;
+                                }
+                                else {
+                                    character.style.backgroundColor = "skyblue";
+                                    dealerCount++;
+                                }
                                 personList.insertBefore(character, addCharacterBtn);
+                                updateCount();
                             }
                         }
                     })
@@ -122,6 +152,7 @@
             </div>
             <button class="add_person">사람 추가</button>
             <button type="submit">파티 짜기</button>
+            <h3 class="count"><span class="pink">버퍼</span> <span class="buffer">0</span> <span class="skyblue">딜러</span> <span class="dealer">0</span></h3>
         </form>
     </div>
 </body>
