@@ -124,6 +124,13 @@
                                 }
                                 personList.insertBefore(character, addCharacterBtn);
                                 updateCount();
+
+                                // character 삭제 이벤트
+                                character.addEventListener("click", (e) => {
+                                    character.style.backgroundColor === "pink" ? bufferCount-- : dealerCount--;
+                                    updateCount();
+                                    character.remove();
+                                })
                             }
                         }
                     })
