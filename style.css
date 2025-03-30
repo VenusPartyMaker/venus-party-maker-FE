@@ -1,0 +1,12 @@
+li span, li button {
+    margin-left: 5px;
+}
+.pink {
+    color: pink;
+}
+.skyblue {
+    color: skyblue;
+}
+.none {
+    display: none;
+}
