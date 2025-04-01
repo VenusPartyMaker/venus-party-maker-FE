@@ -1,13 +1,13 @@
+
 let bufferCount = 0, dealerCount = 0;
 
 // character 객체
 class Character {
-    constructor(ownedName, serverId, characterName, isBuffer, power) {
+    constructor(ownedName, characterName, isBuffer, power) {
         this.ownedName = ownedName;
-        this.serverId = serverId;
         this.characterName = characterName;
         this.isBuffer = isBuffer;
-        this.power =power;
+        this.power = power;
     }
 }
 
@@ -19,63 +19,27 @@ const updateCount = () => {
     buffer.textContent = bufferCount;
     dealer.textContent = dealerCount;
 }
-// 서버명 -> 서버id 변환 함수
-const severnameToServerid = (severName) => {
-    switch (severName) {
-        case "안톤" : {
-            return "anton";
-        }
-        case "바칼" : {
-            return "bakal";
-        }
-        case "카인" : {
-            return "cain";
-        }
-        case "카시야스" : {
-            return "casillas";
-        }
-        case "디레지에" : {
-            return "diregie";
-        }
-        case "힐더" : {
-            return "hilder";
-        }
-        case "프레이" : {
-            return "prey";
-        }
-        case "시로코" : {
-            return "siroco";
-        }
-        default : {
-            alert("서버를 잘못 입력했습니다.");
-            return false;
-        }
-    }
-}
-// 버퍼 확인 함수
-const isBuffer = (jobName) => {
-    return ["크루세이더", "인챈트리스", "뮤즈"].includes(jobName) ? 1 : 0;
-}
 
-async function getCharacter(serverId, characterName) {
-    return new Promise((resolve, reject) => {
-        $.ajax({
-            url: `http://3.38.183.110:8080/api/v1/party/getCharacter?serverId=${serverId}&characterName=${characterName}`,
-            method: "GET",
-            dataType: "json",
-            success: function(data) {
-                console.log("API 응답:", data);
-                resolve(data);
-            },
-            error: function(xhr, status, error) {
-                alert("없는 캐릭터이거나, 에러가 발생했습니다.");
-                console.log("에러:", error);
-                reject(error);
-            }
-        });
+const postCharactorSet = (characterSet) => {
+    fetch("http://3.38.183.110:8080/api/v1/party/create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(characterSet),
+    })
+    .then(response => {
+        if (!response.ok) {
+          throw new Error("서버 응답 실패");
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log("서버 응답:", data);
+    })
+    .catch(error => {
+        console.error("에러 발생:", error);
     });
 }
-
+    
 document.addEventListener("DOMContentLoaded", () => {
     const input_page = document.querySelector(".input");
     const output_page = document.querySelector(".output");
@@ -106,15 +70,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 e.preventDefault();
 
                 let character = document.createElement("span");
-                let id = prompt("'서버명 캐릭터명'을 입력해 주세요.").split(' ');
+                let info = prompt("[캐릭터명] [버퍼/딜러] [버프력/전투력]을 입력해 주세요.").split(' ');
 
-                if (id) {
-                    if (severnameToServerid(id[0]) && id.length === 2) {
-                        character.textContent = `[${id[0]}] ${id[1]}`;
-                        let info = await getCharacter(severnameToServerid(id[0]), id[1]);
-                        character.id = `${severnameToServerid(id[0])}_${id[1]}_${isBuffer(info.jobName)}_${info.power}`;
-                        isBuffer(info.jobName) ? character.style.backgroundColor = "pink" : character.style.backgroundColor = "skyblue";
-                        if (isBuffer(info.jobName)) {
+                if (info) {
+                    if (info.length === 3 && info[1] === "버퍼" || info[1] === "딜러" && !isNaN(info[2])) {
+                        character.textContent = `${info[0]} ${info[2]}`;
+                        character.id = `${info[0]}_${info[1] === "버퍼" ? 1 : 0}_${info[2]}`;
+                        if (info[1] === "버퍼") {
                             character.style.backgroundColor = "pink";
                             bufferCount++;
                         }
@@ -131,6 +93,9 @@ document.addEventListener("DOMContentLoaded", () => {
                             updateCount();
                             character.remove();
                         })
+                    }
+                    else {
+                        alert("양식이 잘못되었습니다.");
                     }
                 }
             })
@@ -151,7 +116,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     })
 
-    // 파티 짜기 이벤트
+    // 파티 생성 이벤트
     make_party_btn.addEventListener("click", (e) => {
         e.preventDefault();
 
@@ -165,12 +130,13 @@ document.addEventListener("DOMContentLoaded", () => {
                     characterList.push(new Character(
                         character.parentElement.className,
                         character.id.split("_")[0],
-                        character.id.split("_")[1],
-                        character.id.split("_")[2],
-                        character.id.split("_")[3]
+                        parseInt(character.id.split("_")[1]),
+                        character.id.split("_")[2]
                     ))
                 });
-                let partyList = makeParty(characterList);
+                console.log(characterList);
+                let partyList = postCharactorSet(characterList);
+                console.log(partyList);
 
                 input_page.className = "input none";
                 output_page.className = "output";
