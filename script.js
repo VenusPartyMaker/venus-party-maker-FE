@@ -20,30 +20,36 @@ const updateCount = () => {
     dealer.textContent = dealerCount;
 }
 
-const postCharactorSet = (characterSet) => {
-    fetch("http://3.38.183.110:8080/api/v1/party/create", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(characterSet),
-    })
-    .then(response => {
+// 버퍼 판별 함수
+const isBuffer = (str) => {
+    return str === "버퍼" ? 1 : 0;
+}
+
+const postCharactorSet = async (characterSet) => {
+    try {
+        const response = await fetch("http://3.38.183.110:8080/api/v1/party/create", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(characterSet)
+        });
+
         if (!response.ok) {
-          throw new Error("서버 응답 실패");
+            throw new Error("서버 응답 실패");
         }
-        return response.json();
-    })
-    .then(data => {
+        const data = await response.json();
         console.log("서버 응답:", data);
-    })
-    .catch(error => {
+        return data;
+    } catch (error) {
         console.error("에러 발생:", error);
-    });
+        return null;
+    }
 }
     
 document.addEventListener("DOMContentLoaded", () => {
     const input_page = document.querySelector(".input");
     const output_page = document.querySelector(".output");
     const person_list = document.querySelector(".person_list");
+    const party_list = document.querySelector(".party_list");
     const add_person_btn = document.querySelector(".add_person_btn");
     const make_party_btn = document.querySelector(".make_party_btn");
     const back_btn = document.querySelector(".back_btn");
@@ -75,7 +81,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (info) {
                     if (info.length === 3 && info[1] === "버퍼" || info[1] === "딜러" && !isNaN(info[2])) {
                         character.textContent = `${info[0]} ${info[2]}`;
-                        character.id = `${info[0]}_${info[1] === "버퍼" ? 1 : 0}_${info[2]}`;
+                        character.id = `${info[0]}_${isBuffer(info[1])}_${info[2]}`;
                         if (info[1] === "버퍼") {
                             character.style.backgroundColor = "pink";
                             bufferCount++;
@@ -117,7 +123,7 @@ document.addEventListener("DOMContentLoaded", () => {
     })
 
     // 파티 생성 이벤트
-    make_party_btn.addEventListener("click", (e) => {
+    make_party_btn.addEventListener("click", async (e) => {
         e.preventDefault();
 
         let totalCount = bufferCount + dealerCount;
@@ -134,9 +140,29 @@ document.addEventListener("DOMContentLoaded", () => {
                         character.id.split("_")[2]
                     ))
                 });
-                console.log(characterList);
-                let partyList = postCharactorSet(characterList);
-                console.log(partyList);
+                const partyList = await postCharactorSet(characterList);
+
+                partyList.forEach((partySet, i) => {
+                    let party = document.createElement("li");
+                    let partyPower = document.createElement("span");
+
+                    party.textContent = `${i+1}번째 파티`;
+                    partyPower.textContent = `${partySet.totalPower}%`;
+                    party_list.appendChild(party);
+                    party.appendChild(partyPower);
+
+                    partySet.characters.forEach(character => {
+                        let char = document.createElement("span");
+                        char.textContent = `[${character.ownedName}] ${character.characterName}`
+                        if (character.isBuffer) {
+                            char.style.backgroundColor = "pink";
+                        }
+                        else {
+                            char.style.backgroundColor = "skyblue";
+                        }
+                        party.insertBefore(char, partyPower);
+                    })
+                })
 
                 input_page.className = "input none";
                 output_page.className = "output";
@@ -154,6 +180,7 @@ document.addEventListener("DOMContentLoaded", () => {
     back_btn.addEventListener("click", (e) => {
         e.preventDefault();
 
+        party_list.innerHTML = "";
         input_page.className = "input";
         output_page.className = "output none";
     })
