@@ -70,7 +70,7 @@ const getCharacter = async (server, name) => {
 const postCharacterSet = async (characterSet) => {
     try {
         const response = await fetch(
-            "http://3.38.183.110:8080/api/v1/party/create",
+            "http://3.36.58.16:8080/api/v1/party/create",
             {
                 method: "POST",
                 headers: { "Content-Type": "application/json; charset=UTF-8" },
