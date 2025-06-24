@@ -1,4 +1,5 @@
-let bufferCount = 0, dealerCount = 0;
+let bufferCount = 0,
+    dealerCount = 0;
 
 // character 객체
 class Character {
@@ -8,7 +9,7 @@ class Character {
         this.isBuffer = isBuffer;
         this.powers = powers;
     }
-};
+}
 
 // 카운트 업데이트 함수
 const updateCount = () => {
@@ -20,26 +21,38 @@ const updateCount = () => {
 };
 
 // 버퍼 판별 함수
-const isBuffer = (jobName) => ["크루세이더", "인챈트리스", "뮤즈"].includes(jobName);
+const isBuffer = (jobName) =>
+    ["크루세이더", "인챈트리스", "뮤즈", "패러메딕"].includes(jobName);
 
 // 서버 변환 함수
 const convertServerName = (keyword1) => {
     switch (keyword1) {
-        case "안톤" : return "anton";
-        case "바칼" : return "bakal";
-        case "카인" : return "cain";
-        case "카시야스" : return "casillas";
-        case "디레지에" : return "diregie";
-        case "힐더" : return "hilder";
-        case "프레이" : return "prey";
-        case "시로코": return "siroco";
-        default : return false;
+        case "안톤":
+            return "anton";
+        case "바칼":
+            return "bakal";
+        case "카인":
+            return "cain";
+        case "카시야스":
+            return "casillas";
+        case "디레지에":
+            return "diregie";
+        case "힐더":
+            return "hilder";
+        case "프레이":
+            return "prey";
+        case "시로코":
+            return "siroco";
+        default:
+            return false;
     }
-}
+};
 
 const getCharacter = async (server, name) => {
     try {
-        const response = await fetch(`http://3.38.183.110:8080/api/v1/party/getCharacter?serverId=${server}&characterName=${name}`);
+        const response = await fetch(
+            `http://3.38.183.110:8080/api/v1/party/getCharacter?serverId=${server}&characterName=${name}`
+        );
 
         if (!response.ok) {
             throw new Error("서버 응답 실패");
@@ -47,13 +60,12 @@ const getCharacter = async (server, name) => {
         const data = await response.json();
         console.log("data:", data);
         return data;
-    }
-    catch (error) {
+    } catch (error) {
         alert("존재하지 않는 캐릭터이거나, 에러가 발생했습니다.");
         console.error("에러 발생:", error);
         return null;
     }
-}
+};
 
 const postCharacterSet = async (characterSet) => {
     try {
@@ -61,8 +73,8 @@ const postCharacterSet = async (characterSet) => {
             "http://3.38.183.110:8080/api/v1/party/create",
             {
                 method: "POST",
-                headers: { "Content-Type": "application/json; charset=UTF-8"},
-                body: JSON.stringify(characterSet)
+                headers: { "Content-Type": "application/json; charset=UTF-8" },
+                body: JSON.stringify(characterSet),
             }
         );
 
@@ -72,8 +84,7 @@ const postCharacterSet = async (characterSet) => {
         const data = await response.json();
         console.log("data:", data);
         return data;
-    }
-    catch (error) {
+    } catch (error) {
         console.error("에러 발생:", error);
         return null;
     }
@@ -116,9 +127,14 @@ document.addEventListener("DOMContentLoaded", () => {
                     keyword = keyword.split(" ");
                     if (keyword.length === 2) {
                         if (convertServerName(keyword[0])) {
-                            let info = await getCharacter(convertServerName(keyword[0]), keyword[1]);
+                            let info = await getCharacter(
+                                convertServerName(keyword[0]),
+                                keyword[1]
+                            );
 
-                            character.id = `${person.className}_${info.characterName}_${isBuffer(info.jobName)}_${info.powers}`
+                            character.id = `${person.className}_${
+                                info.characterName
+                            }_${isBuffer(info.jobName)}_${info.powers}`;
                             character.textContent = `${info.characterName} ${info.powers[0]}`;
 
                             if (isBuffer(info.jobName)) {
@@ -133,13 +149,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
                             // character 삭제 이벤트
                             character.addEventListener("click", () => {
-                                isBuffer(info.jobName) ? bufferCount-- : dealerCount--;
+                                isBuffer(info.jobName)
+                                    ? bufferCount--
+                                    : dealerCount--;
                                 updateCount();
                                 character.remove();
                             });
-                            }
-                        else {
-                            alert("서버명을 잘못 입력했습니다.")
+                        } else {
+                            alert("서버명을 잘못 입력했습니다.");
                         }
                     } else {
                         alert("양식이 잘못되었습니다.");
