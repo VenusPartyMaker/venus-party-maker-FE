@@ -1,0 +1,12 @@
+@import "./tailwind.css";
+@import "./font.css";
+
+@layer base {
+    body {
+        font-family: "GmarketSansMedium", sans-serif;
+        cursor: default;
+    }
+    button {
+        cursor: pointer;
+    }
+}
