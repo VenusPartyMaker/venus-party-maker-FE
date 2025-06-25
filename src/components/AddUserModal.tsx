@@ -1,10 +1,10 @@
 import { useModalStore } from "../store/modalStore";
-import { useListStore } from "../store/listStore";
+import { useDataStore } from "../store/dataStore";
 import { useRef, useState } from "react";
 
 export default function AddUserModal() {
     const { setAddUserModalOpen } = useModalStore();
-    const { addUser } = useListStore();
+    const { addUser } = useDataStore();
     const inputRef = useRef<HTMLInputElement>(null);
     const [showLengthMsg, setShowLengthMsg] = useState(false);
 

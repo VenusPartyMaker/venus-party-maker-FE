@@ -1,8 +1,8 @@
 import ListItem from "./ListItem";
-import { useListStore } from "../store/listStore";
+import { useDataStore } from "../store/dataStore";
 
 export default function List() {
-    const list = useListStore((state) => state.list);
+    const list = useDataStore((state) => state.list);
 
     return (
         <>

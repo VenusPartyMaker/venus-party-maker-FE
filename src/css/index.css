@@ -13,10 +13,12 @@
     h1 {
         font-family: "GmarketSansBold", sans-serif;
         font-size: 40px;
+        padding-top: 8px;
     }
     h2 {
         font-family: "GmarketSansBold", sans-serif;
         font-size: 32px;
+        padding-top: 4px;
     }
     h3 {
         font-family: "GmarketSansBold", sans-serif;
