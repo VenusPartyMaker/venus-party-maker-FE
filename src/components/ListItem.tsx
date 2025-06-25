@@ -1,17 +1,26 @@
 import { FaRegTrashAlt } from "react-icons/fa";
 import ListCharacter from "./ListCharacter";
-import { useListStore } from "../store/listStore";
+import { useDataStore } from "../store/dataStore";
+import { useToastStore } from "../store/toastStore";
 
 export default function ListItem({ user }: { user: User }) {
-    const { deleteUser } = useListStore();
+    const { deleteUser } = useDataStore();
+    const { setisToastOpen } = useToastStore();
 
     const handleDeleteUser = () => {
         deleteUser(user.name);
     };
 
+    const handleOpenToast = () => {
+        setisToastOpen(user.name);
+    };
+
     return (
         <>
-            <li className="min-h-[100px] w-full rounded-2xl shadow-[0_2px_6px_rgba(0,0,0,0.5)] grid grid-cols-[10%_80%_10%] items-center cursor-pointer">
+            <li
+                className="min-h-[100px] w-full rounded-2xl shadow-[0_2px_6px_rgba(0,0,0,0.5)] grid grid-cols-[10%_80%_10%] items-center cursor-pointer"
+                onClick={handleOpenToast}
+            >
                 <h3 className="justify-self-center">{user.name}</h3>
                 {user.characters.length ? (
                     <div className="flex flex-row gap-5">
@@ -25,7 +34,10 @@ export default function ListItem({ user }: { user: User }) {
                 )}
                 <div
                     className="justify-self-center p-2 rounded-md hover:bg-gray-100 duration-200"
-                    onClick={handleDeleteUser}
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        handleDeleteUser();
+                    }}
                 >
                     <FaRegTrashAlt size={20} color="red" />
                 </div>

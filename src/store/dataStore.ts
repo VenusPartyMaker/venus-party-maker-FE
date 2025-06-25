@@ -7,6 +7,8 @@ interface DataStore {
     bufferCount: number;
     addUser: (user: string) => void;
     deleteUser: (user: string) => void;
+    addAccount: (user: string, account: string) => void;
+    deleteAccount: (user: string) => void;
     // addCharacter: (character: { name: string; isBuffer: boolean }) => void;
     // deleteCharacter: (name: string) => void;
 }
@@ -29,6 +31,20 @@ export const useDataStore = create<DataStore>()((set, get) => ({
         set({
             list: get().list.filter((u) => u.name !== user),
             userCount: get().userCount - 1,
+        });
+    },
+    addAccount: (user, account) => {
+        set({
+            list: get().list.map((u) =>
+                u.name === user ? { ...u, account: account } : u
+            ),
+        });
+    },
+    deleteAccount: (user) => {
+        set({
+            list: get().list.map((u) =>
+                u.name === user ? { ...u, account: null } : u
+            ),
         });
     },
     // addCharacter: (character) => {},

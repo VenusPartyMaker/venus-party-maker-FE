@@ -1,6 +1,6 @@
 import { useModalStore } from "../store/modalStore";
 import { useDataStore } from "../store/dataStore";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function AddUserModal() {
     const { setAddUserModalOpen } = useModalStore();
@@ -29,6 +29,10 @@ export default function AddUserModal() {
         });
         setAddUserModalOpen();
     };
+
+    useEffect(() => {
+        inputRef.current?.focus();
+    }, []);
 
     return (
         <>
