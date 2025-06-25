@@ -42,7 +42,7 @@ export default function AddUserModal() {
                     onSubmit={handleSubmitModal}
                 >
                     <div className="w-full">
-                        <h2>인원 추가</h2>
+                        <h2>유저 추가</h2>
                     </div>
                     <div>
                         <input

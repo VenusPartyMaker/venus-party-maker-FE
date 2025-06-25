@@ -15,7 +15,7 @@ export default function Header() {
                         className="h-[40px] w-[120px] rounded-full border-2 hover:bg-gray-200 duration-200"
                         onClick={handleAddUserModal}
                     >
-                        인원 추가
+                        유저 추가
                     </button>
                 </div>
                 <div className="flex flex-row text-lg gap-4">
