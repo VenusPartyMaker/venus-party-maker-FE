@@ -41,14 +41,14 @@ export default function AddUserModal() {
                 onClick={handleCloseModal}
             >
                 <form
-                    className="flex flex-col p-10 pb-5 rounded-2xl bg-white items-center gap-5"
+                    className="flex flex-col w-[500px] p-10 pb-5 rounded-2xl bg-white items-center gap-5"
                     onClick={(e) => e.stopPropagation()}
                     onSubmit={handleSubmitModal}
                 >
                     <div className="w-full">
                         <h2>유저 추가</h2>
                     </div>
-                    <div>
+                    <div className="w-[100%]">
                         <input
                             placeholder="이름을 입력해주세요."
                             ref={inputRef}
