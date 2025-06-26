@@ -26,8 +26,12 @@ export default function ListItem({ user }: { user: User }) {
                 <h3 className="justify-self-center">{user.name}</h3>
                 {user.characters.length ? (
                     <div className="flex flex-row gap-5">
-                        <ListCharacter name="뙒" isBuffer={false} />
-                        <ListCharacter name="단비꺼" isBuffer={true} />
+                        {user.characters.map((character) => (
+                            <ListCharacter
+                                character={character}
+                                key={character.characterId}
+                            />
+                        ))}
                     </div>
                 ) : (
                     <p className="text-[#7D7D7D]">

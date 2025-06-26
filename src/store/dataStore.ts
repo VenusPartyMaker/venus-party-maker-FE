@@ -9,7 +9,7 @@ interface DataStore {
     deleteUser: (user: string) => void;
     addAccount: (user: string, account: string) => void;
     deleteAccount: (user: string) => void;
-    // addCharacter: (character: { name: string; isBuffer: boolean }) => void;
+    addCharacter: (user: string, character: Character) => void;
     // deleteCharacter: (name: string) => void;
 }
 
@@ -47,6 +47,14 @@ export const useDataStore = create<DataStore>()((set, get) => ({
             ),
         });
     },
-    // addCharacter: (character) => {},
+    addCharacter: (user, character) => {
+        set({
+            list: get().list.map((u) =>
+                u.name === user
+                    ? { ...u, characters: [...u.characters, character] }
+                    : u
+            ),
+        });
+    },
     // deleteCharacter: (name) => {},
 }));

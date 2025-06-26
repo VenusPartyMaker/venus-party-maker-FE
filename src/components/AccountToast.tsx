@@ -52,6 +52,7 @@ export default function AccountToast({ userName }: { userName: string }) {
                         <div className="grid grid-cols-[30%_30%_30%] justify-between gap-6 pt-[26px]">
                             {characters?.map((character) => (
                                 <CharacterCard
+                                    user={user.name}
                                     character={character}
                                     key={character.characterId}
                                 />
