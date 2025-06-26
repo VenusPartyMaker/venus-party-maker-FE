@@ -1,9 +1,11 @@
 export declare global {
     interface Character {
-        name: string;
-        isBuffer: boolean;
+        serverId: string;
+        characterName: string;
+        jobName: string;
+        characterId: string;
+        fame: number;
     }
-
     interface User {
         name: string;
         account: string | null;

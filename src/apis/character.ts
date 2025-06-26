@@ -18,10 +18,6 @@ export const addCharacter = async (
             }),
         }
     );
-    if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || "API 호출 실패");
-    }
 
     const data = await response.json();
     return data;
