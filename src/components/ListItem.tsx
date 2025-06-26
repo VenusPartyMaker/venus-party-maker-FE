@@ -6,6 +6,7 @@ import { useToastStore } from "../store/toastStore";
 export default function ListItem({ user }: { user: User }) {
     const { deleteUser } = useDataStore();
     const { setisToastOpen } = useToastStore();
+    const toastUser = useToastStore((state) => state.toastUser);
 
     const handleDeleteUser = () => {
         deleteUser(user.name);
@@ -18,7 +19,8 @@ export default function ListItem({ user }: { user: User }) {
     return (
         <>
             <li
-                className="min-h-[100px] w-full rounded-2xl shadow-[0_2px_6px_rgba(0,0,0,0.5)] grid grid-cols-[10%_80%_10%] items-center cursor-pointer"
+                className={`min-h-[100px] w-full rounded-2xl shadow-[0_2px_6px_rgba(0,0,0,0.5)] grid grid-cols-[10%_80%_10%] items-center cursor-pointer
+                    ${toastUser === user.name && "ring-3"}`}
                 onClick={handleOpenToast}
             >
                 <h3 className="justify-self-center">{user.name}</h3>

@@ -1,12 +1,15 @@
 import { useEffect, useRef } from "react";
 import { useDataStore } from "../store/dataStore";
+import { useModalStore } from "../store/modalStore";
 // import CharacterCard from "./CharacterCard";
+import { getCharacter } from "../apis/character";
 
 export default function AccountToast({ userName }: { userName: string }) {
     const user = useDataStore((state) => state.list).find(
         (u) => u.name === userName
     );
     const { addAccount, deleteAccount } = useDataStore();
+    const { CharacterModalOpen } = useModalStore();
 
     const inputRef = useRef<HTMLInputElement>(null);
 
@@ -20,6 +23,15 @@ export default function AccountToast({ userName }: { userName: string }) {
 
     useEffect(() => {
         inputRef.current?.focus();
+
+        const getCharacters = async () => {
+            if (user?.account) {
+                const characters = await getCharacter(user?.account);
+                console.log(characters);
+            }
+        };
+
+        getCharacters();
     }, [user?.account]);
 
     return (
@@ -42,7 +54,12 @@ export default function AccountToast({ userName }: { userName: string }) {
                             <CharacterCard />
                             <CharacterCard />
                             <CharacterCard /> */}
-                            <button className="flex w-[100%] h-[100px] bg-[#F2F2F2] rounded-2xl items-center justify-center text-3xl text-[#7D7D7D] pt-1">
+                            <button
+                                className="flex w-[100%] h-[100px] bg-[#F2F2F2] rounded-2xl items-center justify-center text-3xl text-[#7D7D7D] pt-1"
+                                onClick={() =>
+                                    CharacterModalOpen(user.account!)
+                                }
+                            >
                                 +
                             </button>
                         </div>
