@@ -33,6 +33,12 @@ export default function AddCharacterModal({ userName }: { userName: string }) {
     const handleSubmitModal = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
+        if (inputRef.current!.value.replace(/\s/g, "") === "") {
+            inputRef.current!.value = "";
+            inputRef.current?.focus();
+            return;
+        }
+
         const response = await addCharacter(
             user!.account!,
             serverSelect,
