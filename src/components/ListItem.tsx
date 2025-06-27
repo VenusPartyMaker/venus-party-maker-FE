@@ -28,6 +28,7 @@ export default function ListItem({ user }: { user: User }) {
                     <div className="flex flex-row gap-5">
                         {user.characters.map((character) => (
                             <ListCharacter
+                                userName={user.name}
                                 character={character}
                                 key={character.characterId}
                             />

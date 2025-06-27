@@ -11,7 +11,7 @@ interface DataStore {
     addAccount: (user: string, account: string) => void;
     deleteAccount: (user: string) => void;
     addCharacter: (user: string, character: Character) => void;
-    // deleteCharacter: (name: string) => void;
+    deleteCharacter: (user: string, character: Character) => void;
 }
 
 export const useDataStore = create<DataStore>()((set, get) => ({
@@ -29,9 +29,18 @@ export const useDataStore = create<DataStore>()((set, get) => ({
         });
     },
     deleteUser: (user) => {
+        const deleteUser = get().list.find((u) => u.name === user);
+        const deleteBufferCount = deleteUser!.characters.filter((character) =>
+            isBuffer(character.jobName)
+        ).length;
+        const deleteDealerCount =
+            deleteUser!.characters.length - deleteBufferCount!;
+
         set({
             list: get().list.filter((u) => u.name !== user),
             userCount: get().userCount - 1,
+            dealerCount: get().dealerCount - deleteDealerCount,
+            bufferCount: get().bufferCount - deleteBufferCount,
         });
     },
     addAccount: (user, account) => {
@@ -55,13 +64,32 @@ export const useDataStore = create<DataStore>()((set, get) => ({
                     ? { ...u, characters: [...u.characters, character] }
                     : u
             ),
-            bufferCount: isBuffer(character.jobName)
-                ? get().bufferCount + 1
-                : get().bufferCount,
             dealerCount: isBuffer(character.jobName)
                 ? get().dealerCount
                 : get().dealerCount + 1,
+            bufferCount: isBuffer(character.jobName)
+                ? get().bufferCount + 1
+                : get().bufferCount,
         });
     },
-    // deleteCharacter: (name) => {},
+    deleteCharacter: (user, character) => {
+        set({
+            list: get().list.map((u) =>
+                u.name === user
+                    ? {
+                          ...u,
+                          characters: u.characters.filter(
+                              (c) => c.characterId !== character.characterId
+                          ),
+                      }
+                    : u
+            ),
+            dealerCount: isBuffer(character.jobName)
+                ? get().dealerCount
+                : get().dealerCount - 1,
+            bufferCount: isBuffer(character.jobName)
+                ? get().bufferCount - 1
+                : get().bufferCount,
+        });
+    },
 }));
