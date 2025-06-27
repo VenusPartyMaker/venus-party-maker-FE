@@ -4,6 +4,8 @@ import { useDataStore } from "../store/dataStore";
 export default function Header() {
     const { setAddUserModalOpen } = useModalStore();
     const userCount = useDataStore((state) => state.userCount);
+    const dealerCount = useDataStore((state) => state.dealerCount);
+    const bufferCount = useDataStore((state) => state.bufferCount);
 
     const handleAddUserModal = () => {
         setAddUserModalOpen();
@@ -20,17 +22,23 @@ export default function Header() {
                         유저 추가
                     </button>
                 </div>
-                <div className="flex flex-row text-lg gap-4">
+                <div className="flex flex-row justify-between text-lg">
+                    <div className="flex flex-row gap-4">
+                        <p>
+                            딜러{" "}
+                            <span className="gmarket-bold text-blue-300">
+                                {dealerCount}
+                            </span>
+                        </p>
+                        <p>
+                            버퍼{" "}
+                            <span className="gmarket-bold text-red-300">
+                                {bufferCount}
+                            </span>
+                        </p>
+                    </div>
                     <p>
-                        유저 <span className="gmarket-bold">{userCount}</span>
-                    </p>
-                    <p>
-                        딜러{" "}
-                        <span className="gmarket-bold text-blue-300">0</span>
-                    </p>
-                    <p>
-                        버퍼{" "}
-                        <span className="gmarket-bold text-red-300">0</span>
+                        <span className="gmarket-bold">{userCount}</span>명
                     </p>
                 </div>
             </div>

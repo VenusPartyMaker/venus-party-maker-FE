@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { isBuffer } from "../utils/isBuffer";
 
 interface DataStore {
     list: User[];
@@ -54,6 +55,12 @@ export const useDataStore = create<DataStore>()((set, get) => ({
                     ? { ...u, characters: [...u.characters, character] }
                     : u
             ),
+            bufferCount: isBuffer(character.jobName)
+                ? get().bufferCount + 1
+                : get().bufferCount,
+            dealerCount: isBuffer(character.jobName)
+                ? get().dealerCount
+                : get().dealerCount + 1,
         });
     },
     // deleteCharacter: (name) => {},
