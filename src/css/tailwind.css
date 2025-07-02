@@ -1,0 +1,10 @@
+@import "tailwindcss";
+
+@layer {
+    .server-btn {
+        @apply w-[100px] h-[40px] border-2 rounded-full;
+    }
+    .server-btn-selected {
+        @apply border-none bg-[#9121B4] text-white;
+    }
+}
