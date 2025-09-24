@@ -5,7 +5,7 @@ export const addCharacter = async (
     characterName: string
 ) => {
     const response = await fetch(
-        "http://3.36.58.16:8080/api/v2/character/add",
+        "https://venuspartymaker.shop/api/v2/character/add",
         {
             method: "POST",
             headers: {
@@ -26,7 +26,7 @@ export const addCharacter = async (
 /* 모험단으로 캐릭터 조회 */
 export const getCharacter = async (adventureName: string) => {
     const response = await fetch(
-        `http://3.36.58.16:8080/api/v2/character/get?adventureName=${adventureName}`
+        `https://venuspartymaker.shop/api/v2/character/get?adventureName=${adventureName}`
     );
 
     if (!response.ok) {
